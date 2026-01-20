@@ -1,0 +1,297 @@
+Project to Start: Bank API Sandbox
+
+Definition:
+A simulated backend banking system designed to mimic how real-world financial institutions manage accounts, 
+balances, and transactions. Similar to a real bank but Known as a safe testing environment that behaves like one.
+
+Core Purpose of project
+===========================
+Provides developers with:
+1.	Vitual Users, can create customers who hold bank accounts in the system.
+2.	Virtual bank accounts, each user account has a balance currency unique account number & timestamps
+3.	Bank operations, support despositing money, withdrawing, transfering (bank-to-bank transfers) like in real banks apps etc
+
+Transaction Ledger
+===========================
+Every operation iss recorded as a transaction as
+-	transaction_id
+-	from_account
+-	to_account
+-	type (deposit/withdraw/transfer)
+-	amount
+-	status
+-	timestamp
+- 	Fraud Detection
+
+This builds an audit trail — EXACTLY how banks track money.
+
+
+
+API-Driven System
+==========================
+All interactions happen through REST API endpoints, such as:
+-	POST /users
+-	POST /accounts
+-	POST /accounts/{id}/deposit
+-	POST /transactions/transfer
+
+This teaches you to design, build, test, and secure financial APIs.
+
+Stack
+==========================
+
+Frontend - Simple
+-	Html
+-	CSS
+-	JS
+-	React
+
+Backend
+-	Python
+-	FastAPI Python
+-	PostgreSQL
+-	SQLAlchemy
+
+API Postman to test
+
+======================================
+======================================
+This is the correct sequence for a real fintech-style backend project.
+
+---
+======================================
+======================================
+# 🚀 **PHASE 1 — Environment & Project Setup (Start Here)**
+======================================
+======================================
+
+### **1. Create project folder**
+```
+bank-api
+```
+
+### **2. Set up Python environment**
+
+```
+python -m venv venv  
+activate venv in second folder for venv
+```
+
+### **3. Install backend dependencies**
+
+```
+pip install fastapi uvicorn sqlalchemy psycopg2-binary python-dotenv alembic pydantic
+```
+
+### **4. Create FastAPI project structure**
+
+```
+bank-api/
+│── app/
+│   ├── main.py
+│   ├── db.py
+│   ├── models/
+│   ├── schemas/
+│   ├── routes/
+│   ├── services/
+│── .env
+│── requirements.txt
+```
+
+### **5. Set up PostgreSQL locally**
+
+Create database:
+
+bank_sandbox
+---
+======================================
+======================================
+# 🏗️ **PHASE 2 — Database & Models**
+======================================
+======================================
+
+This is where you define “what the bank *stores*”.
+
+### **Create SQLAlchemy models:**
+
+* User
+* Account
+* Transaction
+
+### **Tables you’ll end up with:**
+
+#### **users**
+
+| id | name | email | password | created_at |
+
+#### **accounts**
+
+| id | user_id | balance | currency | created_at |
+
+#### **transactions**
+
+| id | account_from | account_to | amount | type | status | timestamp |
+
+### **Set up Alembic for migrations**
+
+```
+alembic init migrations
+```
+
+This allows you to update the DB properly over time.
+
+---
+======================================
+======================================
+# ⚙️ **PHASE 3 — Core API Endpoints (MVP)**
+======================================
+======================================
+
+These are the *core banking functions*.
+
+### **Users**
+
+* `POST /users` → create user
+* `GET /users/{id}` → view user
+
+### **Accounts**
+
+* `GET /accounts/{id}` → view balance
+* `POST /accounts/{id}/deposit`
+* `POST /accounts/{id}/withdraw`
+* `POST /transactions/transfer`
+
+### **Mandatory business rules:**
+
+* deposit: amount > 0
+* withdraw: cannot overdraw
+* transfer: from_account != to_account
+
+---
+======================================
+======================================
+# 🧪 **PHASE 4 — Testing**
+======================================
+======================================
+
+Use Postman to test each endpoint.
+
+Sample tests:
+
+* deposit R500 → balance increases
+* withdraw R200 → balance decreases
+* transfer R100 → both accounts update
+* invalid withdrawal (insufficient funds) → error
+
+---
+======================================
+======================================
+# 🔐 **PHASE 5 — Authentication (JWT)**
+======================================
+======================================
+
+Add login, registration and secure routes.
+
+Endpoints:
+
+* `POST /auth/login`
+* `POST /auth/register`
+
+Use JWT tokens to protect:
+
+* transfer
+* deposit
+* withdraw
+* list accounts
+
+---
+
+# 🛡️ **PHASE 6 — Fraud Rules (Simple Logic)**
+
+Add first rule, for example:
+
+### ❗ Block transfers > R150,000
+
+or
+
+### ❗ Block more than 5 transfers in 60 seconds
+
+Add a field:
+
+* `status: approved / rejected`
+
+---
+
+# 📊 **PHASE 7 — Optional Dashboard Frontend**
+
+Use:
+
+* HTML/CSS/JS
+  or
+* React (if you want modern UI skills)
+
+Pages:
+
+* Dashboard
+* Balances
+* Transfers
+* Transactions
+
+---
+
+# 🌐 **PHASE 8 — Documentation**
+
+FastAPI auto-generates:
+
+```
+localhost:8000/docs
+```
+
+This shows your entire API.
+
+You add:
+
+* README
+* setup instructions
+* sample requests
+* design notes
+
+---
+
+# ✔️ **Summary of What to Do FIRST**
+
+If you want to start TODAY, here’s your exact move sequence:
+
+### **Today / Step 1:**
+
+* Create folder
+* Set up virtual environment
+* Install FastAPI + SQLAlchemy
+* Create project structure
+
+### **Today / Step 2:**
+
+* Install PostgreSQL
+* Create `bank_sandbox` DB
+* Create `.env` with DB connection
+
+### **Next Step:**
+
+* Build models (User, Account, Transaction)
+* Run first Alembic migration
+
+### **Next:**
+
+* Build API endpoints
+* Test in Postman
+
+Then continue into auth, fraud rules, frontend, etc.
+
+---
+
+If you want, I can generate:
+✅ the **starter project folder & files**,
+or
+✅ the **database schema**,
+or
+✅ your **first models + endpoints to paste into VS Code**.

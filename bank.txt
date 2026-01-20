@@ -1,0 +1,209 @@
+## 🔥 **Next Immediate Steps: Phase 1 & 2**
+
+---
+
+### 1. **Create your project folder structure**
+
+Inside your project root `Bank-API-Sandox`, create the `app/` folder and subfolders as per your notes:
+
+```
+Bank-API-Sandox/
+│
+├── app/
+│   ├── main.py          # FastAPI app entrypoint
+│   ├── db.py            # DB connection + session
+│   ├── models/          # SQLAlchemy models here
+│   ├── schemas/         # Pydantic schemas for validation
+│   ├── routes/          # API endpoint routes
+│   ├── services/        # Business logic / services layer
+│
+├── .env                 # Environment variables (DB credentials)
+├── requirements.txt     # List of dependencies (pip freeze > requirements.txt)
+└── sqlalchemy_venv/     # Your virtual environment folder
+```
+
+---
+
+### 2. **Set up your PostgreSQL database locally**
+
+* Install PostgreSQL (if not installed)
+* Create a database called `bank_sandbox`
+
+Example in psql shell:
+
+```sql
+CREATE DATABASE bank_sandbox;
+```
+
+---
+
+### 3. **Create `.env` file**
+
+In project root, create `.env` to hold environment variables like DB connection:
+
+```
+DATABASE_URL=postgresql://username:password@localhost:5432/bank_sandbox
+```
+
+Replace `username` and `password` with your PostgreSQL credentials.
+
+---
+
+### 4. **Create your DB connection in `app/db.py`**
+
+Example minimal `db.py` using SQLAlchemy:
+
+```python
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+```
+
+---
+
+### 5. **Create your first models in `app/models/user.py`**
+
+Example `User` model:
+
+```python
+from sqlalchemy import Column, Integer, String, DateTime
+from datetime import datetime
+from app.db import Base
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    password = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+```
+
+---
+
+### 6. **Initialize Alembic migrations**
+
+In project root terminal:
+
+```bash
+alembic init migrations
+```
+
+Configure `alembic.ini` to use your `DATABASE_URL`, and update `env.py` to import your models so migrations work.
+
+---
+
+### 7. **Create your first migration**
+
+```bash
+alembic revision --autogenerate -m "Create users table"
+alembic upgrade head
+```
+
+---
+
+### 8. **Set up `app/main.py`**
+
+Minimal FastAPI app to test:
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Bank API Sandbox is running"}
+```
+
+Run it with:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+---
+
+## Summary
+
+You’re at the perfect point to start **building your models and database layer** while testing FastAPI with a simple route.
+
+===================
+===================
+===================
+Great question! These folders and files organize your backend code logically and keep your project clean, maintainable, and scalable.
+
+Here’s a detailed explanation of each:
+
+---
+
+### 1. **`db.py` — DB Connection + Session**
+
+* This file sets up the connection to your database (PostgreSQL in your case).
+* It creates the **SQLAlchemy engine** and **session factory** used throughout your app.
+* Essentially, it’s the place where you configure how your app talks to the database.
+* Example role:
+
+  * Connect to the database using the connection URL.
+  * Create sessions for querying and committing data.
+
+---
+
+### 2. **`models/` — SQLAlchemy Models**
+
+* This folder contains Python classes that represent **database tables**.
+* Each model maps to a table, with columns as attributes.
+* For example, a `User` model represents the `users` table with fields like `id`, `name`, `email`.
+* SQLAlchemy uses these models to create tables and run queries.
+* This is your **data layer** schema.
+
+---
+
+### 3. **`schemas/` — Pydantic Schemas for Validation**
+
+* Pydantic schemas define the **shape and validation rules** for data coming *into* or going *out of* your API.
+* These schemas are Python classes that validate request data or format response data.
+* They protect your API by ensuring inputs are correct and outputs are consistent.
+* Example: When a client sends JSON to create a user, the schema checks that all required fields exist and have the correct types.
+* It separates **how data looks in your API** from **how it’s stored in the database**.
+
+---
+
+### 4. **`routes/` — API Endpoint Routes**
+
+* This folder contains your FastAPI **route definitions** (the URL endpoints).
+* Each route handles a specific HTTP request, like `POST /users` or `GET /accounts/{id}`.
+* Routes use models, schemas, and services to fulfill client requests.
+* Organizing routes here helps keep your API logic modular and easier to manage.
+
+---
+
+### 5. **`services/` — Business Logic / Services Layer**
+
+* The services folder contains **core business logic** — the “rules” behind how your API works.
+* It’s the layer that performs tasks like:
+
+  * Depositing money into an account
+  * Checking if a withdrawal is allowed (e.g., no overdraft)
+  * Processing transfers and updating balances
+* Separating this logic from routes keeps code clean and testable.
+* Routes just call services to do the work and return results.
+
+---
+
+### Why this structure?
+
+* Keeps concerns separated — easier to maintain and scale.
+* Easier for multiple developers to collaborate.
+* Makes testing specific parts (like business rules) easier without dealing with HTTP or DB layers.
+
