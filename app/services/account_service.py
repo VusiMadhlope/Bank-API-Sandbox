@@ -1,9 +1,9 @@
 from random import random
 import string
 from sqlalchemy.orm import Session
-from app.models.account import Account
-from app.models.user import User
-from app.schemas.account import AccountCreate
+from app.models.account_model import Account
+from app.models.user_model import User
+from app.schemas.account_schemas import AccountCreate
 
 class AccountService:
     @staticmethod

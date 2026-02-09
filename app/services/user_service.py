@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.user import User
-from app.schemas.user import UserCtreate
+from app.models.user_model import User
+from app.schemas.user_schemas import UserCtreate
 import hashlib
 
 class UserService:

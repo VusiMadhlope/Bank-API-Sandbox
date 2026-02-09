@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from app.models.transactions import Transaction
-from app.models.account import Account
-from app.schemas.transaction import TransactionCreate
+from app.models.transactions_model import Transaction
+from app.models.account_model import Account
+from app.schemas.transaction_schemas import TransactionCreate
 from datetime import datetime
 
 class TransactionService:
