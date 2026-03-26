@@ -1,0 +1,1 @@
+By defitiniton A Bank API Sandbox is a simulated banking system that mimics how real financial instiutions manage accounts, balances and transactions. It is a safe testing environment that behaves as a real bank without the need for real money.
